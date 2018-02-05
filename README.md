@@ -33,7 +33,7 @@ For the linear model, I use cross-validation to choose the best parameter among 
 ## Ensemble Generation
 
 Ensemble Learning refers to the technique of combining different models. It reduces both bias and variance of the final model, thus increasing the score and reducing the risk of overfitting. I mainly use the idea of stack, which is use the output of basic models as the input for the final model. In terms of basic models, I choose to average the models elastic net, GBoost and kernel-ridge. For the meta model, I use the linear model lasso.
-![stack in practice](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/)
+[stack in practice](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/)
 
 ## Results
 
@@ -63,6 +63,6 @@ My submission is currently ranked in the Top 10% on Kaggle and this can certainl
 
 v1.2 Skewness analysis
 For linear regression model, it assumes that the residual satisfies the normal distribution. Therefore, skewness should be avoided. Besides, for price data, it is more sensable to use log. 
-![deal with skewness](https://becominghuman.ai/how-to-deal-with-skewed-dataset-in-machine-learning-afd2928011cc)
+[deal with skewness](https://becominghuman.ai/how-to-deal-with-skewed-dataset-in-machine-learning-afd2928011cc)
 
 v1.3 For XGBT model parameter tuning, set the default parameters and use ROC-AUC to firstly have a sense about overfitting or underfitting. Then change related parameters.
