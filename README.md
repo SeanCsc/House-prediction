@@ -62,5 +62,7 @@ My submission is currently ranked in the Top 10% on Kaggle and this can certainl
 ## Update
 
 v1.2 Skewness analysis
+For linear regression model, it assumes that the residual satisfies the normal distribution. Therefore, skewness should be avoided. Besides, for price data, it is more sensable to use log. 
+![deal with skewness](https://becominghuman.ai/how-to-deal-with-skewed-dataset-in-machine-learning-afd2928011cc)
 
 v1.3 For XGBT model parameter tuning, set the default parameters and use ROC-AUC to firstly have a sense about overfitting or underfitting. Then change related parameters.
