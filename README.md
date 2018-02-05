@@ -1,66 +1,49 @@
 # [House Prices: Advanced Regression Techniques](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)
 
-[github pages](https://ptiwaree.github.io/Kaggle-House-Prices/)
-
-Ask a home buyer to describe their dream house, and they probably won't begin with the height of the basement ceiling or the proximity to an east-west railroad. But this playground competition's dataset proves that much more influences price negotiations than the number of bedrooms or a white-picket fence.
-
-With 79 explanatory variables describing (almost) every aspect of residential homes in Ames, Iowa, this competition challenges you to predict the final price of each home.
-
-The potential for creative feature engineering provides a rich opportunity for fun and learning. This dataset lends itself to advanced regression techniques like random forests and gradient boosting with the popular XGBoost library. We encourage Kagglers to create benchmark code and tutorials on Kernels for community learning. Top kernels will be awarded swag prizes at the competition close. 
-
+This is a Kaggle competition. We are given almost 80 features of houses. And we are required to predict the price. With these features, it is a good practice for the data preprocessing, feature engineering and model ensemble to achieve the prediction.
 
 ## Introduction
 
-In this Kaggle challenge, I use different Regression and other Machine Learning techniques to predict the final price for each home using the features provided in the dataset. Before running ML algorithms, I preprocessed the data to remove outliers, to deal with missing values, and to encode categorical variables. 
+In this Kaggle competition. I firstly preprocess data (concate the training and test datasets), including remove outliers, filling up missing values based on the meaning and transfer those non-int variables to categorical variables. For the models, I ensemble advanced tree models and linear models to get the result.
 
 ## Data Preprocessing and Exploration
 
-[Data Preprocessing Notebook](https://github.com/ptiwaree/Kaggle-House-Prices/blob/master/Modeling/House%20Prices%20-%20Feature%20Engineering-2.ipynb)
-
-In the above notebook, I do the following:
+For the data preprocessing and exploration
 
   1. Load the csv files
-  2. Look into null values and fix them if they needed fixing. Some nulls were legitimate. For example, if the house has no fireplace (Fireplaces=0), then Fireplace Quality (FireplaceQu) equal to null is fine. In other cases, like LotFrontage, I use the median LotFrontage for the neighborhood to replace the nulls.
-  3. Address skewness of features and output by log transforming them.
-  4. Do one-hot encoding for categorical variables. This increased the number of features but not by much.
+  2. Fill in the missing values. Most of the missing value of features are because of lack of that feature, such as fence, I filled them with None. For some numerical feature, I fill them with the mean value of the neighbors or 0.
+  3. For non-numerical features, use get_dummies to transform them to 0/1 value.
   
-Some of the features are shown below in this plot of features vs output price
-
-![Features](https://github.com/ptiwaree/Kaggle-House-Prices/blob/master/Results/Features.png)
+## Feature Engineering
+  1. Feature importance. Use Lasso to measure the importance of feature and drop the feature with 0 variance.
+  2. Add related features like total square
+  3. Standarization and Normalization
   
 ## Model Selection
 
-I decided to use Ridge and Lasso Regression, Gradient Boosting Machine (GradientBoostingRegressor), and ExtraTreesRegressor which are all part of sklearn package to predict the output. Ridge, Lasso and GBM had similar Cross Validation Score (using 5-fold) while ExtraTreesRegressor did worse so I stacked the first 3 algorithms using xgboost. 
+Because this is a regression problem. So I decided to use linear model, like ridge and lasso regression, elastic-net. Besides, I use Tree model like XGBT. 
+
+## Model Evaluation
+I use 5-fold to do cross-validation and negative MSE as the measurement of the performance for model.
 
 ## Model Training
+For the linear model, I use cross-validation to choose the best parameter among 5 candidates. For tree models, I use grid search twice to determine the max depth, number of trees. 
 
-We can improve a model’s performance by tuning its parameters. So I used grid search method to tune hyperparameters for xgboost regressor, GradientBoostingRegressor, and ExtraTreesRegressor. Following notebooks contain Model Training.
-
-[Boosting](https://github.com/ptiwaree/Kaggle-House-Prices/blob/master/Modeling/House%20Prices%20-%20Boosting-3.ipynb)
-[ExtraTreesRegression](https://github.com/ptiwaree/Kaggle-House-Prices/blob/master/Modeling/House%20Prices%20-%20ExtraTreesRegressor.ipynb)
 
 ## Ensemble Generation
 
-Ensemble Learning refers to the technique of combining different models. It reduces both bias and variance of the final model, thus increasing the score and reducing the risk of overfitting. Techniques like boosted trees and ExtraTreesRegressor are already using Ensemble method and I also used stacking method to combine the output from the 3 techniques (Ridge, Lasso and GBM) and used them as meta features to xgboost algorithm to predict final output. Following notebook has the details:
-
-[Stacking Notebook](https://github.com/ptiwaree/Kaggle-House-Prices/blob/master/Modeling/House%20Prices%20-%20Stacking.ipynb)
+Ensemble Learning refers to the technique of combining different models. It reduces both bias and variance of the final model, thus increasing the score and reducing the risk of overfitting. I mainly use the idea of stack, which is use the output of basic models as the input for the final model. In terms of basic models, I choose to average the models elastic net, GBoost and kernel-ridge. For the meta model, I use the linear model lasso.
+![stack in practice](http://blog.kaggle.com/2016/12/27/a-kagglers-guide-to-model-stacking-in-practice/)
 
 ## Results
 
-My submission is currently ranked in the Top 12% on Kaggle and this can certainly be improved. One thing I notice is that at higher house prices errors increase and I seem to be underpredicting the price. Following charts show this (it is predicted on 20% of the validation data set aside from the Training data):
-
-![Predictions1](https://github.com/ptiwaree/Kaggle-House-Prices/blob/master/Results/predictionchart1.png)
-
-![Predictions2](https://github.com/ptiwaree/Kaggle-House-Prices/blob/master/Results/predictionchart2.png)
-
-![Training Predictions](https://github.com/ptiwaree/Kaggle-House-Prices/blob/master/Results/predictiontrain2.png)
+My submission is currently ranked in the Top 10% on Kaggle and this can certainly be improved.
 
 ## Tools Utilized
 
 ####Stack:
 
 * python
-* git
 
 ####Modeling:
 
@@ -69,8 +52,15 @@ My submission is currently ranked in the Top 12% on Kaggle and this can certainl
 * pandas
 * scikit-learn
 * xgboost
+* model-selection
 
-####Plotting:
+####Statistics observation:
 
 * matplotlib
 * seaborn
+
+## Update
+
+v1.2 Skewness analysis
+
+v1.3 For XGBT model parameter tuning, set the default parameters and use ROC-AUC to firstly have a sense about overfitting or underfitting. Then change related parameters.
